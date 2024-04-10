@@ -1,16 +1,31 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import { useSelector } from 'react-redux';
+import { updateTaskInList } from '../slices/tasksSlice';
+import { useDispatch } from 'react-redux';
 
 
 export default function TaskModal(props) {
+    const { selectedTask } = useSelector((state) => state.tasks);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [id, setId] = useState(0);
+    const dispatch = useDispatch()
 
-    const updateTask = () =>{
+    const updateTask = () => {
         props.onHide();
+        dispatch(updateTaskInList({id,title,description}))
     }
+
+    useEffect(() => {
+        if (Object.keys(selectedTask).length !== 0) {
+            setTitle(selectedTask.title)
+            setDescription(selectedTask.description)
+            setId(selectedTask.id)
+        }
+    }, [selectedTask])
     return (
         <Modal
             {...props}
@@ -34,15 +49,15 @@ export default function TaskModal(props) {
                         <Form.Label>Task Description</Form.Label>
                         <Form.Control type="text" placeholder="Enter Description" value={description} onChange={(e) => setDescription(e.target.value)} />
                     </Form.Group>
-                    
+
                 </Form>
             </Modal.Body>
             <Modal.Footer>
                 <div className='text-end'>
-                        <Button variant="primary" type="submit" onClick={(e) => updateTask(e)}>
-                            Update Task
-                        </Button>
-                    </div>
+                    <Button variant="primary" type="submit" onClick={(e) => updateTask(e)}>
+                        Update Task
+                    </Button>
+                </div>
             </Modal.Footer>
         </Modal>
     )

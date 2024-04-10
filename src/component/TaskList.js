@@ -2,16 +2,24 @@ import React, { useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import TaskModal from './UpdateTask';
+import { useSelector } from 'react-redux';
+import { setSelectedTask, removeTaskFromList } from '../slices/tasksSlice';
+import { useDispatch } from 'react-redux';
+
 
 export default function TaskList() {
+  const { tasksList } = useSelector((state) => state.tasks)
   const [modalShow, setModalShow] = useState(false);
+  const dispatch = useDispatch();
 
-  const updateTask = () => {
+
+  const updateTask = (task) => {
     console.log("update task");
     setModalShow(true);
+    dispatch(setSelectedTask(task))
   }
-  const deleteTask = () => {
-
+  const deleteTask = (task) => {
+    dispatch(removeTaskFromList(task))
   }
   return (
     <>
@@ -26,15 +34,22 @@ export default function TaskList() {
         </thead>
 
         <tbody>
-          <tr className='text-center'>
-            <td>1</td>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>
-              <Button variant="primary" className='mx-3' onClick={() => updateTask()}> <i class="bi bi-pencil-square"></i> </Button>
-              <Button variant="primary" onClick={() => deleteTask()}> <i class="bi bi-trash3"></i></Button>
-            </td>
-          </tr>
+          {
+            tasksList && tasksList.map((task, index) => {
+              return (
+                <tr className='text-center'>
+                  <td>{index + 1}</td>
+                  <td>{task.title}</td>
+                  <td>{task.description}</td>
+                  <td>
+                    <Button variant="primary" className='mx-3' onClick={() => updateTask(task)}> <i class="bi bi-pencil-square"></i> </Button>
+                    <Button variant="primary" onClick={() => deleteTask(task)}> <i class="bi bi-trash3"></i></Button>
+                  </td>
+                </tr>
+              )
+            })
+          }
+
         </tbody>
       </Table>
 
