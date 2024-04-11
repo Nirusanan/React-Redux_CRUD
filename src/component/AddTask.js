@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { addTaskToList } from '../slices/tasksSlice';
+import { addTaskToList, addTasksToServer } from '../slices/tasksSlice';
 import { useDispatch } from 'react-redux';
 
 export default function AddTask() {
@@ -13,7 +13,10 @@ export default function AddTask() {
     const addTask = (e) => {
         e.preventDefault();
         console.log({ title, description });
-        dispatch(addTaskToList({ title, description }))
+        // Local object
+        // dispatch(addTaskToList({ title, description }))
+        // Server
+        dispatch(addTasksToServer({ title, description }))
         setTitle('')
         setDescription('')
     }
