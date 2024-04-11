@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import TaskModal from './UpdateTask';
 import { useSelector } from 'react-redux';
-import { setSelectedTask, removeTaskFromList } from '../slices/tasksSlice';
+import { setSelectedTask, removeTaskFromList, getTasksFromServer } from '../slices/tasksSlice';
 import { useDispatch } from 'react-redux';
 
 
@@ -17,10 +17,16 @@ export default function TaskList() {
     console.log("update task");
     setModalShow(true);
     dispatch(setSelectedTask(task))
-  }
+  };
+
+  useEffect(() =>{
+    dispatch(getTasksFromServer())
+  }, [dispatch])
+
   const deleteTask = (task) => {
     dispatch(removeTaskFromList(task))
   }
+  
   return (
     <>
       <Table striped bordered hover>
