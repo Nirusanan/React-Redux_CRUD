@@ -3,7 +3,7 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import TaskModal from './UpdateTask';
 import { useSelector } from 'react-redux';
-import { setSelectedTask, removeTaskFromList, getTasksFromServer } from '../slices/tasksSlice';
+import { setSelectedTask, removeTaskFromList, getTasksFromServer, deleteTasksFromServer } from '../slices/tasksSlice';
 import { useDispatch } from 'react-redux';
 
 
@@ -24,9 +24,14 @@ export default function TaskList() {
   }, [dispatch])
 
   const deleteTask = (task) => {
-    dispatch(removeTaskFromList(task))
-  }
-  
+    dispatch(deleteTasksFromServer(task))
+    .unwrap()
+    .then(() =>{
+      dispatch(removeTaskFromList(task))
+    })
+    
+  };
+
   return (
     <>
       <Table striped bordered hover>
