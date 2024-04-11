@@ -44,6 +44,27 @@ export const addTasksToServer = createAsyncThunk(
     }
 )
 
+//PATCH
+export const updateTasksInServer = createAsyncThunk(
+    "tasks/updateTasksInServer",
+    async (task, {rejectWithValue}) =>{
+        const options = {
+            method: 'PATCH',
+            body: JSON.stringify(task),
+            headers: {
+                "content-type": "application/json; charset=UTF-8"
+            }
+        }
+        const response = await fetch(BASE_URL + '/' + task.id, options)
+        if (response.ok){
+            const jsonResponse = await response.json() 
+            return jsonResponse
+        } else {
+            return rejectWithValue({error:'Task Not Updated'})
+        }
+    }
+)
+
 const tasksSlice = createSlice({
     name: 'tasksSlice',
     initialState,
@@ -91,6 +112,18 @@ const tasksSlice = createSlice({
                 state.tasksList.push(action.payload)
             })
             .addCase(addTasksToServer.rejected, (state, action) => {
+                state.error = action.payload.error
+                state.isLoading = false
+            })
+            .addCase(updateTasksInServer.pending, (state) =>{
+                state.isLoading = true
+            })
+            .addCase(updateTasksInServer.fulfilled, (state, action) =>{
+                state.isLoading = false
+                state.error= ''
+                state.tasksList = state.tasksList.map((task) => task.id === action.payload.id ? action.payload : task)
+            })
+            .addCase(updateTasksInServer.rejected, (state, action) => {
                 state.error = action.payload.error
                 state.isLoading = false
             })

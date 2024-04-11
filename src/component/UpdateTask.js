@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { useSelector } from 'react-redux';
-import { updateTaskInList } from '../slices/tasksSlice';
+import { updateTaskInList, updateTasksInServer } from '../slices/tasksSlice';
 import { useDispatch } from 'react-redux';
 
 
@@ -16,7 +16,8 @@ export default function TaskModal(props) {
 
     const updateTask = () => {
         props.onHide();
-        dispatch(updateTaskInList({id,title,description}))
+        // dispatch(updateTaskInList({id,title,description}))
+        dispatch(updateTasksInServer({id,title,description}))
     }
 
     useEffect(() => {
